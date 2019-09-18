@@ -8,7 +8,7 @@
       <van-field v-model="user.code" type="password" label="验证码" placeholder="请输入验证码" required />
     </van-cell-group>
     <div class="login-btn">
-      <van-button type="info" @click="onlogin">登录</van-button>
+      <van-button type="info" :loading="isLoginLoading" @click="onlogin">登录</van-button>
     </div>
   </div>
 </template>
@@ -19,6 +19,7 @@ import { login } from '@/api/user'
 export default {
   data () {
     return {
+      isLoginLoading: false,
       user: {
         mobile: '',
         code: ''
@@ -37,6 +38,7 @@ export default {
     //   console.log(data)
     // }
     async onlogin () {
+      this.isLoginLoading = true
       try {
         const { data } = await login(this.user)
         console.log(data)
@@ -46,6 +48,7 @@ export default {
           this.$toast.fail('手机号或验证码错误')
         }
       }
+      this.isLoginLoading = false
     }
   }
 }
