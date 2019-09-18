@@ -1,6 +1,6 @@
 // 封装axios请求函数
 import axios from 'axios'
-// 处理安全整数范围的问题
+// 处理安全整数范围问题
 import jsonBigInt from 'json-bigint'
 
 const request = axios.create({
