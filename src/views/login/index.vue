@@ -58,8 +58,11 @@ export default {
         }
         // 验证成功就提交表单
         this.isLoginLoading = true // 显示加载状态
-        await login(this.user)
+        const res = await login(this.user)
         // console.log(data)
+        // 调用setUser
+        // res.data.data里面有token数据
+        this.$store.commit('setUser', res.data.data)
         this.$toast.success('登录成功')
       } catch (err) {
         if (err.response && err.response.status === 400) {

@@ -4,7 +4,7 @@ import router from './router'
 import store from './store'
 import './styles/index.less'
 // 按需注册 Vant 组件
-import { Button, NavBar, Field, CellGroup, Cell, Toast } from 'vant'
+import { Button, NavBar, Field, CellGroup, Cell, Toast, Tabbar, TabbarItem } from 'vant'
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate'
 import zhCN from 'vee-validate/dist/locale/zh_CN' // 加载验证插件的语言包
 import * as rules from 'vee-validate/dist/rules'
@@ -25,11 +25,13 @@ extend('phone', {
 })
 
 Vue.use(Button)
-Vue.use(NavBar)
-Vue.use(Field)
-Vue.use(CellGroup)
-Vue.use(Cell)
-Vue.use(Toast)
+  .use(NavBar)
+  .use(Field)
+  .use(CellGroup)
+  .use(Cell)
+  .use(Toast)
+  .use(Tabbar)
+  .use(TabbarItem)
 
 Vue.config.productionTip = false
 // 注册为全局组件
