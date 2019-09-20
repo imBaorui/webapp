@@ -57,7 +57,7 @@ export default {
           return
         }
         // 验证成功就提交表单
-        this.isLoginLoading = true // 显示加载状态
+        this.isLoginLoading = true // 显示加载态状
         const res = await login(this.user)
         // console.log(data)
         // 调用setUser
