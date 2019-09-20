@@ -4,7 +4,7 @@ import router from './router'
 import store from './store'
 import './styles/index.less'
 // 按需注册 Vant 组件
-import { Button, NavBar, Field, CellGroup, Cell, Toast, Tabbar, TabbarItem } from 'vant'
+import { Button, NavBar, Field, CellGroup, Cell, Toast, Tabbar, TabbarItem, Tab, Tabs } from 'vant'
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate'
 import zhCN from 'vee-validate/dist/locale/zh_CN' // 加载验证插件的语言包
 import * as rules from 'vee-validate/dist/rules'
@@ -32,6 +32,8 @@ Vue.use(Button)
   .use(Toast)
   .use(Tabbar)
   .use(TabbarItem)
+  .use(Tab)
+  .use(Tabs)
 
 Vue.config.productionTip = false
 // 注册为全局组件
