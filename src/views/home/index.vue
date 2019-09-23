@@ -1,50 +1,83 @@
 <template>
   <div class="home">
-    <van-nav-bar title="首页" fixed/>
-       <!-- 频道列表 -->
+    <van-nav-bar title="首页" fixed />
+    <!-- 频道列表 -->
     <van-tabs v-model="active" color="#fa9521">
       <van-tab :title="channel.name" v-for="channel in channels" :key="channel.id">
-        <van-pull-refresh  v-model="channel.pullDownLoading" @refresh="onRefresh">
-          <van-list v-model="channel.loading" :finished="channel.finished" finished-text="没有更多了" @load="onLoad" >
+        <van-pull-refresh v-model="channel.pullDownLoading" @refresh="onRefresh">
+          <van-list
+            v-model="channel.loading"
+            :finished="channel.finished"
+            finished-text="没有更多了"
+            @load="onLoad"
+          >
             <!-- 具体的内容 -->
-              <van-cell v-for="article in channel.articles" :key="article.art_id.toString()" :title="article.title">
+            <van-cell
+              v-for="article in channel.articles"
+              :key="article.art_id.toString()"
+              :title="article.title"
+            >
               <div slot="label">
                 <!-- 文章图片 -->
-                  <van-grid :border="false" :column-num="3">
-                    <van-grid-item v-for="(img, index) in article.cover.images" :key="index">
-                      <!-- Vant 提供的一个显示图片组件 -->
-                      <van-image height="80" :src="img" lazy-load />
-                    </van-grid-item>
-                  </van-grid>
+                <van-grid :border="false" :column-num="3">
+                  <van-grid-item v-for="(img, index) in article.cover.images" :key="index">
+                    <!-- Vant 提供的一个显示图片组件 -->
+                    <van-image height="80" :src="img" lazy-load />
+                  </van-grid-item>
+                </van-grid>
                 <!-- /文章图片 -->
 
                 <!-- 描述信息 -->
-                  <div class="article-info">
-                    <div class="meta">
-                      <span>{{ article.aut_name }}</span>
-                      <span>{{ article.comm_count }}评论</span>
-                      <span>{{ article.pubdate | relativeTime }}</span>
-                    </div>
+                <div class="article-info">
+                  <div class="meta">
+                    <span>{{ article.aut_name }}</span>
+                    <span>{{ article.comm_count }}评论</span>
+                    <span>{{ article.pubdate | relativeTime }}</span>
                   </div>
+                </div>
                 <!-- 描述信息 -->
               </div>
-              </van-cell>
+            </van-cell>
           </van-list>
         </van-pull-refresh>
       </van-tab>
       <div slot="nav-right" class="wap-nav" @click="showOrHidden=true">
-        <van-icon name='wap-nav' size="24"></van-icon>
+        <van-icon name="wap-nav" size="24"></van-icon>
       </div>
     </van-tabs>
 
     <van-popup
       v-model="showOrHidden"
       round
-      closeable
       close-icon-position="top-left"
       position="bottom"
       :style="{ height: '95%' }"
-    />
+    >
+      <!-- 关闭按钮 -->
+      <van-cell icon="cross" :border="false" @click="showOrHidden = false" />
+    <!-- 我的频道 -->
+      <div>
+        <van-cell title="我的频道">
+          <van-button type="danger" size="mini" @click="isEdit=!isEdit">
+            {{ isEdit ? '完成' : '编辑' }}
+          </van-button>
+        </van-cell>
+        <van-grid :gutter="10">
+          <van-grid-item v-for="value in 8" :key="value" icon="photo-o" text="文字">
+            <van-icon name="close" v-show="isEdit" class="icon"/>
+          </van-grid-item>
+        </van-grid>
+      </div>
+      <!-- 频道推荐 -->
+      <div>
+        <van-cell title="频道推荐"></van-cell>
+        <van-grid :gutter="10">
+          <van-grid-item v-for="value in 8" :key="value" text="文字">
+
+          </van-grid-item>
+        </van-grid>
+      </div>
+    </van-popup>
   </div>
 </template>
 
@@ -58,12 +91,13 @@ export default {
     return {
       active: 0, // 控制当前激活的标签页
       channels: [], // 频道列表
-      showOrHidden: false
+      showOrHidden: true,
+      isEdit: false
     }
   },
   computed: {
     currentChannel () {
-    // active 是动态的，active 改变也就意味着 currentChannel 也改变了
+      // active 是动态的，active 改变也就意味着 currentChannel 也改变了
       return this.channels[this.active]
     }
   },
@@ -155,6 +189,11 @@ export default {
     align-items: center;
     background-color: #fff;
     opacity: 0.8;
+  }
+    .icon {
+    position: absolute;
+    top: -5px;
+    right: -5px;
   }
 }
 </style>
