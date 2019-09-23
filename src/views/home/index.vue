@@ -72,9 +72,7 @@
       <div>
         <van-cell title="频道推荐"></van-cell>
         <van-grid :gutter="10">
-          <van-grid-item v-for="value in 8" :key="value" text="文字">
-
-          </van-grid-item>
+          <van-grid-item v-for="channel in remainingChannels" :key="channel.id" :text="channel.name" />
         </van-grid>
       </div>
     </van-popup>
@@ -83,7 +81,7 @@
 
 <script>
 // 引入全部频道的请求模块
-import { getUserOrDefaultChannels } from '../../api/channels'
+import { getUserOrDefaultChannels, getAllChannels } from '../../api/channels'
 import { getArticles } from '../../api/article'
 import { mapState } from 'vuex'
 import { getItem } from '../../utils/storage'
@@ -94,7 +92,9 @@ export default {
       active: 0, // 控制当前激活的标签页
       channels: [], // 频道列表
       showOrHidden: true,
+      allChannels: [], // 存储所有频道列表
       isEdit: false
+
     }
   },
   computed: {
@@ -102,10 +102,26 @@ export default {
     currentChannel () {
       // active 是动态的，active 改变也就意味着 currentChannel 也改变了
       return this.channels[this.active]
+    },
+    /* 获取剩余的频道 */
+    remainingChannels () {
+      // 剩余频道 = 所有频道 - 我的频道
+      const channels = []
+      this.allChannels.forEach(channel => {
+        /* 如果我的频道不包含当前遍历频道，那它就是剩余的频道
+        find 方法：遍历数组，查找满足 item.id === channel.id 的元素，找到就返回该元素
+        如果直到遍历结束都没有，则返回 undefined findIndex 获取满足条件的元素，如果有，则返回该元素对应的索引,如果没有满足的元素，则返回 -1 */
+        const index = this.channels.findIndex(item => item.id === channel.id)
+        if (index === -1) {
+          channels.push(channel)
+        }
+      })
+      return channels
     }
   },
+
   methods: {
-    async loadAllChannels () {
+    async loadUserOrDefaultChannels () {
       // 开始的时候还没有考虑频道管理这件事儿，所以为了简单，这里直接获取了所有频道列表
       // const { data } = await getAllChannels()
       // 定制频道的内容数据
@@ -177,9 +193,15 @@ export default {
       currentChannel.pullDownLoading = false
       // 4. 提示用户刷新成功
       this.$toast('刷新成功')
+    },
+    // 获取所有频道
+    async loadAllChannels () {
+      const { data } = await getAllChannels()
+      this.allChannels = data.data.channels
     }
   },
   created () {
+    this.loadUserOrDefaultChannels()
     this.loadAllChannels()
   }
 }

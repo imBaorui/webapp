@@ -1,6 +1,9 @@
 // 获取所有的频道接口
 import request from '../utils/request'
 
+/**
+ * 获取所有频道列表
+ */
 export const getAllChannels = () => {
   return request({
     method: 'GET',
