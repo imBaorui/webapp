@@ -64,7 +64,7 @@
         </van-cell>
         <van-grid :gutter="10">
           <van-grid-item v-for="channel in channels" :key="channel.id" :text="channel.name">
-            <!-- <van-icon name="close" v-show="isEdit" class="icon"/> -->
+            <van-icon name="close" v-show="isEdit" class="icon" slot="icon"/>
           </van-grid-item>
         </van-grid>
       </div>
@@ -72,7 +72,7 @@
       <div>
         <van-cell title="频道推荐"></van-cell>
         <van-grid :gutter="10">
-          <van-grid-item v-for="channel in remainingChannels" :key="channel.id" :text="channel.name" />
+          <van-grid-item v-for="channel in remainingChannels" :key="channel.id" :text="channel.name" @click="onAddChannel(channel)"/>
         </van-grid>
       </div>
     </van-popup>
@@ -81,10 +81,13 @@
 
 <script>
 // 引入全部频道的请求模块
-import { getUserOrDefaultChannels, getAllChannels } from '../../api/channels'
+import {
+  getUserOrDefaultChannels,
+  getAllChannels,
+  resetUserChannels } from '../../api/channels'
 import { getArticles } from '../../api/article'
 import { mapState } from 'vuex'
-import { getItem } from '../../utils/storage'
+import { getItem, setItem } from '../../utils/storage'
 export default {
   name: 'HomeIndex',
   data () {
@@ -198,6 +201,30 @@ export default {
     async loadAllChannels () {
       const { data } = await getAllChannels()
       this.allChannels = data.data.channels
+    },
+    // 点击添加频道
+    async onAddChannel (channel) {
+      // 添加到我的频道
+      this.channels.push(channel)
+      // 持久化
+      if (this.user) {
+        // 已登录：请求保存到后端
+        // [ { id: 频道id, seq: 序号 }, { id: 频道id, seq: 序号 }, ]
+        const channels = []
+        // 处理提取要重置的频道列表
+        // this.channels.slice(1) 不包括第1个频道（推荐）
+        this.channels.slice(1).forEach((item, index) => {
+          channels.push({
+            id: item.id,
+            seq: index + 2
+          })
+        })
+        // 请求重置
+        await resetUserChannels(channels)
+      } else {
+        // 未登录：本地存储
+        setItem('channels', this.channels)
+      }
     }
   },
   created () {

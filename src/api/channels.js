@@ -22,3 +22,14 @@ export const getUserOrDefaultChannels = () => {
     url: '/app/v1_0/user/channels'
   })
 }
+
+// 重置用户频道列表
+export const resetUserChannels = channels => {
+  return request({
+    method: 'PUT',
+    url: '/app/v1_0/user/channels',
+    data: {
+      channels
+    }
+  })
+}
