@@ -63,8 +63,8 @@
           </van-button>
         </van-cell>
         <van-grid :gutter="10">
-          <van-grid-item v-for="value in 8" :key="value" icon="photo-o" text="文字">
-            <van-icon name="close" v-show="isEdit" class="icon"/>
+          <van-grid-item v-for="channel in channels" :key="channel.id" :text="channel.name">
+            <!-- <van-icon name="close" v-show="isEdit" class="icon"/> -->
           </van-grid-item>
         </van-grid>
       </div>
@@ -83,8 +83,10 @@
 
 <script>
 // 引入全部频道的请求模块
-import { getAllChannels } from '../../api/channels'
+import { getUserOrDefaultChannels } from '../../api/channels'
 import { getArticles } from '../../api/article'
+import { mapState } from 'vuex'
+import { getItem } from '../../utils/storage'
 export default {
   name: 'HomeIndex',
   data () {
@@ -96,6 +98,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['user']),
     currentChannel () {
       // active 是动态的，active 改变也就意味着 currentChannel 也改变了
       return this.channels[this.active]
@@ -103,16 +106,36 @@ export default {
   },
   methods: {
     async loadAllChannels () {
-      const { data } = await getAllChannels()
+      // 开始的时候还没有考虑频道管理这件事儿，所以为了简单，这里直接获取了所有频道列表
+      // const { data } = await getAllChannels()
       // 定制频道的内容数据
-      data.data.channels.forEach(channel => {
+
+      // 有了频道管理这个业务
+      let channels = []
+      // 1. 如果用户已登录，则请求获取后端存储的用户频道列表
+      if (this.user) {
+        const { data } = await getUserOrDefaultChannels()
+        channels = data.data.channels
+      } else {
+        // 2. 如果用户没有登录，则查看本地存储是否有频道列表
+        const localChannels = getItem('channels')
+        // 2.1 如果本地存储有，则获取使用
+        if (localChannels) {
+          channels = localChannels
+        } else {
+          // 2.2 如果本地存储没有，则请求获取默认推荐的频道列表
+          const { data } = await getUserOrDefaultChannels()
+          channels = data.data.channels
+        }
+      }
+      channels.forEach(channel => {
         channel.articles = [] // 频道的文章列表
         channel.loading = false // 频道的上拉加载更多的 loading 状态
         channel.finished = false // 频道的加载结束的状态
         channel.timestamp = null // 用于获取下一页数据的时间戳（页码）
         channel.pullDownLoading = false // 频道的下拉刷新 loading 状态
       })
-      this.channels = data.data.channels
+      this.channels = channels
     },
     async onLoad () {
       // 异步更新数据
