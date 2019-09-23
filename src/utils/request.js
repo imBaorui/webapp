@@ -5,7 +5,7 @@ import jsonBigInt from 'json-bigint'
 
 // 非组件模块访问容器直接加载即可
 // 这里得到的 store 和组件中访问的 this.$store 是一个东西
-import store from '@/store'
+import store from '../store'
 
 const request = axios.create({
   baseURL: 'http://ttapi.research.itcast.cn'

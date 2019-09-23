@@ -9,12 +9,12 @@ const router = new VueRouter({
   // 配置路由表
   routes: [
     {
-      path: '/login',
+      path: '/',
       name: 'login',
       component: Login
     },
     {
-      path: '/',
+      path: '/tabbar',
       component: Tabbar,
       children: [
         {
