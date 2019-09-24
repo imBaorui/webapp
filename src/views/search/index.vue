@@ -6,7 +6,7 @@
         v-model="searchText"
         placeholder="请输入搜索关键词"
         show-action
-        @search="onSearch"
+        @search="onSearch(searchText)"
         @cancel="$router.back()"
       />
     </form>
@@ -18,6 +18,7 @@
         icon="search"
         v-for="item in suggestions"
         :key="item"
+        @click="onSearch(item)"
       >
         <div slot="title" v-html="highLight(item)"></div>
       </van-cell>
@@ -58,7 +59,15 @@ export default {
     }
   },
   methods: {
-    onSearch () {},
+    // 搜索内容回车/点击跳转
+    onSearch (q) {
+      this.$router.push({
+        name: 'search-result',
+        params: {
+          q
+        }
+      })
+    },
     onCancel () {},
     // 高亮显示
     highLight (str) {

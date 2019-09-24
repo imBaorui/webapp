@@ -4,6 +4,7 @@ import Login from '../views/login'
 import Tabbar from '../views/tabbar'
 import Home from '../views/home'
 import Search from '../views/search'
+import searchResult from '../views/search-result'
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -18,6 +19,11 @@ const router = new VueRouter({
       path: '/search',
       name: 'search',
       component: Search
+    },
+    {
+      path: '/search/:q',
+      name: 'search-result',
+      component: searchResult
     },
     {
       path: '/tabbar',
