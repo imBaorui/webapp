@@ -1,6 +1,18 @@
 <template>
   <div class="home">
-    <van-nav-bar title="首页" fixed />
+    <van-nav-bar fixed>
+      <!-- 自定义标题内容 -->
+      <van-button
+      slot="title"
+      round
+      size='small'
+      type="info"
+      class="search"
+      @click="$router.push('/search')"
+      >
+        搜索
+      </van-button>
+    </van-nav-bar>
     <!-- 频道列表 -->
     <van-tabs v-model="active" color="#fa9521">
       <van-tab :title="channel.name" v-for="channel in channels" :key="channel.id">
@@ -63,7 +75,11 @@
           </van-button>
         </van-cell>
         <van-grid :gutter="10">
-          <van-grid-item v-for="channel in channels" :key="channel.id" :text="channel.name">
+          <van-grid-item
+            v-for="channel in channels"
+            :key="channel.id"
+            :text="channel.name"
+          >
             <van-icon name="close" v-show="isEdit" class="icon" slot="icon"/>
           </van-grid-item>
         </van-grid>
@@ -72,7 +88,12 @@
       <div>
         <van-cell title="频道推荐"></van-cell>
         <van-grid :gutter="10">
-          <van-grid-item v-for="channel in remainingChannels" :key="channel.id" :text="channel.name" @click="onAddChannel(channel)"/>
+          <van-grid-item
+            v-for="channel in remainingChannels"
+            :key="channel.id"
+            :text="channel.name"
+            @click="onAddChannel(channel)"
+          />
         </van-grid>
       </div>
     </van-popup>
@@ -84,7 +105,8 @@
 import {
   getUserOrDefaultChannels,
   getAllChannels,
-  resetUserChannels } from '../../api/channels'
+  resetUserChannels
+} from '../../api/channels'
 import { getArticles } from '../../api/article'
 import { mapState } from 'vuex'
 import { getItem, setItem } from '../../utils/storage'
@@ -94,7 +116,7 @@ export default {
     return {
       active: 0, // 控制当前激活的标签页
       channels: [], // 频道列表
-      showOrHidden: true,
+      showOrHidden: false,
       allChannels: [], // 存储所有频道列表
       isEdit: false
 
@@ -266,6 +288,11 @@ export default {
     position: absolute;
     top: -5px;
     right: -5px;
+  }
+  .search{
+    width: 100%;
+    border: 0;
+    background:rgb(252, 190, 20);
   }
 }
 </style>

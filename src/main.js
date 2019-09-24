@@ -4,7 +4,8 @@ import router from './router'
 import store from './store'
 import './styles/index.less'
 // 按需注册 Vant 组件
-import { Button,
+import {
+  Button,
   Cell,
   CellGroup,
   NavBar,
@@ -21,7 +22,9 @@ import { Button,
   Image,
   Lazyload,
   Popup,
-  Icon } from 'vant'
+  Icon,
+  Search
+} from 'vant'
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate'
 import zhCN from 'vee-validate/dist/locale/zh_CN' // 加载验证插件的语言包
 import * as rules from 'vee-validate/dist/rules'
@@ -61,6 +64,7 @@ Vue.use(Button)
   .use(Lazyload)
   .use(Popup)
   .use(Icon)
+  .use(Search)
 
 Vue.config.productionTip = false
 // 注册为全局组件
