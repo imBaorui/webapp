@@ -7,7 +7,7 @@
         placeholder="请输入搜索关键词"
         show-action
         @search="onSearch"
-        @cancel="onCancel"
+        @cancel="$router.back()"
       />
     </form>
     <!-- /搜索框 -->
@@ -19,7 +19,7 @@
         v-for="item in suggestions"
         :key="item"
       >
-        <div slot="title">{{item}}</div>
+        <div slot="title" v-html="highLight(item)"></div>
       </van-cell>
     </van-cell-group>
     <!-- /联想建议 -->
@@ -59,16 +59,23 @@ export default {
   },
   methods: {
     onSearch () {},
-    onCancel () {}
+    onCancel () {},
+    // 高亮显示
+    highLight (str) {
+      const searchText = this.searchText
+      // 根据用户输入的内容创建一个动态的正则表达式
+      const reg = new RegExp(searchText, 'gi')
+      return str.replace(reg, `<span style="color: red;">${searchText}</span>`)
+    }
   },
   watch: {
     // 封装接口，监视搜索文本的变化 -> 发送请求 -> 获取结果 -> 将结果绑定到数据 -> 模板绑定
     async searchText (newValue) {
-      if (!newValue.trim().length) {
+      if (!newValue.trim().length) { // trim是去除首尾空格的意思
         return
       }
       const { data } = await getSuggestions(newValue)
-      console.log(data)
+      //   console.log(data)
       this.suggestions = data.data.options
     }
   }
