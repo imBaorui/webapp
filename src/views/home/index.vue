@@ -292,7 +292,7 @@ export default {
   .search{
     width: 100%;
     border: 0;
-    background:rgb(252, 190, 20);
+    background:rgb(250, 210, 34);
   }
 }
 </style>

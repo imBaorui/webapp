@@ -11,10 +11,10 @@ export const getAllChannels = () => {
   })
 }
 
-/**
- * 获取用户频道列表或者默认推荐的频道列表
- * 如果有 token，则返回用户频道列表
- * 如果没有 token，则返回默认推荐的频道列表
+/*
+获取用户频道列表或者默认推荐的频道列表
+ 如果有 token，则返回用户频道列表
+ 如果没有 token，则返回默认推荐的频道列表
  */
 export const getUserOrDefaultChannels = () => {
   return request({
