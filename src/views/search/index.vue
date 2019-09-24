@@ -50,13 +50,16 @@
 
 <script>
 import { getSuggestions } from '../../api/search'
+import { getItem, setItem } from '../../utils/storage'
 export default {
   name: 'SearchIndex',
   data () {
     return {
       searchText: '',
       suggestions: [],
-      searchHistories: [] // 存储历史记录
+      //   searchHistories: [] // 存储历史记录
+      searchHistories: getItem('search-history') || []// 一开始就要从本地读取历史记录
+
     }
   },
   methods: {
@@ -78,6 +81,8 @@ export default {
         searchHistories.splice(index, 1)
       }
       searchHistories.unshift(q)
+      // 为了防止刷新丢失历史记录，需要将历史记录保存到本地存储
+      setItem('search-history', searchHistories)
     //   this.$router.push({
     //     name: 'search-result',
     //     params: {
