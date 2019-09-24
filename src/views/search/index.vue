@@ -36,7 +36,7 @@
           style="line-height: inherit;"
         />
       </van-cell>
-      <van-cell title="hello" v-for="value in 5" :key="value">
+      <van-cell :title="item" v-for="item in searchHistories" :key="item">
         <van-icon
           slot="right-icon"
           name="close"
@@ -55,18 +55,35 @@ export default {
   data () {
     return {
       searchText: '',
-      suggestions: []
+      suggestions: [],
+      searchHistories: [] // 存储历史记录
     }
   },
   methods: {
     // 搜索内容回车/点击跳转
     onSearch (q) {
-      this.$router.push({
-        name: 'search-result',
-        params: {
-          q
-        }
+      // 当按下回车键时就保存历史记录
+      // 如果输入框就数据就进行存储，这里取反为空时就返回
+      if (!q.trim().length) {
+        return
+      }
+      // 记录历史记录
+      const searchHistories = this.searchHistories
+      const index = searchHistories.findIndex(item => {
+        // 忽略空格、大小写
+        return item.trim().toLowerCase() === q.trim().toLowerCase()
       })
+      // 如果已存在，则将其移除
+      if (index !== -1) {
+        searchHistories.splice(index, 1)
+      }
+      searchHistories.unshift(q)
+    //   this.$router.push({
+    //     name: 'search-result',
+    //     params: {
+    //       q
+    //     }
+    //   })
     },
     onCancel () {},
     // 高亮显示
