@@ -50,14 +50,19 @@
     <div class="error" v-else>
       <p>网络超时，点击 <a href="#" @click.prevent="loadArticle">刷新</a> 试一试。</p>
     </div>
+    <article-comment></article-comment>
   </div>
 </template>
 
 <script>
 import { getArticle, likeArticle, unLikeArticle } from '../../api/article'
 import { followUser, unFollowUser } from '../../api/user'
+import ArticleComment from '../../components/comment'
 export default {
   name: 'ArticleIndex',
+  components: {
+    ArticleComment
+  },
   data () {
     return {
       loading: true,
