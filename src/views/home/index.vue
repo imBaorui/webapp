@@ -3,15 +3,13 @@
     <van-nav-bar fixed>
       <!-- 自定义标题内容 -->
       <van-button
-      slot="title"
-      round
-      size='small'
-      type="info"
-      class="search"
-      @click="$router.push('/search')"
-      >
-        搜索
-      </van-button>
+        slot="title"
+        round
+        size="small"
+        type="info"
+        class="search"
+        @click="$router.push('/search')"
+      >搜索</van-button>
     </van-nav-bar>
     <!-- 频道列表 -->
     <van-tabs v-model="active" color="#fa9521">
@@ -28,6 +26,12 @@
               v-for="article in channel.articles"
               :key="article.art_id.toString()"
               :title="article.title"
+              @click="$router.push({
+                name:'article',
+                params:{
+                  articleId:article.art_id.toString()
+                }
+              })"
             >
               <div slot="label">
                 <!-- 文章图片 -->
@@ -67,20 +71,14 @@
     >
       <!-- 关闭按钮 -->
       <van-cell icon="cross" :border="false" @click="showOrHidden = false" />
-    <!-- 我的频道 -->
+      <!-- 我的频道 -->
       <div>
         <van-cell title="我的频道">
-          <van-button type="danger" size="mini" @click="isEdit=!isEdit">
-            {{ isEdit ? '完成' : '编辑' }}
-          </van-button>
+          <van-button type="danger" size="mini" @click="isEdit=!isEdit">{{ isEdit ? '完成' : '编辑' }}</van-button>
         </van-cell>
         <van-grid :gutter="10">
-          <van-grid-item
-            v-for="channel in channels"
-            :key="channel.id"
-            :text="channel.name"
-          >
-            <van-icon name="close" v-show="isEdit" class="icon" slot="icon"/>
+          <van-grid-item v-for="channel in channels" :key="channel.id" :text="channel.name">
+            <van-icon name="close" v-show="isEdit" class="icon" slot="icon" />
           </van-grid-item>
         </van-grid>
       </div>
@@ -119,7 +117,6 @@ export default {
       showOrHidden: false,
       allChannels: [], // 存储所有频道列表
       isEdit: false
-
     }
   },
   computed: {
@@ -284,15 +281,15 @@ export default {
     background-color: #fff;
     opacity: 0.8;
   }
-    .icon {
+  .icon {
     position: absolute;
     top: -5px;
     right: -5px;
   }
-  .search{
+  .search {
     width: 100%;
     border: 0;
-    background:rgb(250, 210, 34);
+    background: rgb(250, 210, 34);
   }
 }
 </style>

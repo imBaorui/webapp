@@ -13,7 +13,7 @@
     <!-- /搜索框 -->
 
     <!-- 联想建议 -->
-    <van-cell-group>
+    <van-cell-group v-if="searchText">
       <van-cell
         icon="search"
         v-for="item in suggestions"
@@ -26,7 +26,7 @@
     <!-- /联想建议 -->
 
     <!-- 历史记录 -->
-    <van-cell-group>
+    <van-cell-group v-else>
       <van-cell title="历史记录">
         <!-- 绑定删除状态 -->
         <template v-if="isDel">
@@ -42,13 +42,13 @@
           style="line-height: inherit;"
         />
       </van-cell>
-      <van-cell :title="item" v-for="(item,index) in searchHistories" :key="item">
+      <van-cell :title="item" v-for="(item,index) in searchHistories" :key="item" @click="onSearch(item)">
         <van-icon
           slot="right-icon"
           name="close"
           style="line-height: inherit;"
           v-show="isDel"
-          @click="searchHistories.splice(index, 1)"
+          @click.stop="searchHistories.splice(index, 1)"
         />
       </van-cell>
     </van-cell-group>
@@ -91,13 +91,19 @@ export default {
       }
       searchHistories.unshift(q)
       // 为了防止刷新丢失历史记录，需要将历史记录保存到本地存储
+      // 这种方法无法将请求中的删除
+      // 监视不是立即发生的，起码等着当前函数执行完它才会去判定数据到底有没有改变
+      // 虽然我们通过监视数据改变的方式处理数据的持久化
+      // 但是这里还要手动的来存储这个数据，因为后面的代码会发生页面跳转
+      // 页面跳转的时候回先销毁当前页面（事件、watch、生命周期。。。。都被干掉了），然后再加载新的页面
       setItem('search-history', searchHistories)
-    //   this.$router.push({
-    //     name: 'search-result',
-    //     params: {
-    //       q
-    //     }
-    //   })
+      // 跳转到搜索详情页
+      this.$router.push({
+        name: 'search-result',
+        params: {
+          q
+        }
+      })
     },
     onCancel () {},
     // 高亮显示
@@ -117,6 +123,10 @@ export default {
       const { data } = await getSuggestions(newValue)
       //   console.log(data)
       this.suggestions = data.data.options
+    },
+    searchHistories (newValue) {
+      // 当数据发生法改变。重新存储
+      setItem('search-history', newValue)
     }
   }
 }

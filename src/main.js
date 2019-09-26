@@ -23,7 +23,8 @@ import {
   Lazyload,
   Popup,
   Icon,
-  Search
+  Search,
+  Loading
 } from 'vant'
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate'
 import zhCN from 'vee-validate/dist/locale/zh_CN' // 加载验证插件的语言包
@@ -65,6 +66,7 @@ Vue.use(Button)
   .use(Popup)
   .use(Icon)
   .use(Search)
+  .use(Loading)
 
 Vue.config.productionTip = false
 // 注册为全局组件
